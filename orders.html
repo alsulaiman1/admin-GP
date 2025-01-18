@@ -1,0 +1,368 @@
+
+
+<!DOCTYPE html>
+
+
+<html dir="rtl">
+
+
+	
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title id="title">بائع</title>
+    <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans:400"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.rtlcss.com/bootstrap/v4.5.3/css/bootstrap.min.css"
+      integrity="sha384-JvExCACAZcHNJEc7156QaHXTnQL3hQBixvj5RV5buE7vgnNEzzskDtx9NQ4p6BJe"
+      crossorigin="anonymous"
+    />
+
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.rtlcss.com/bootstrap/v4.5.3/js/bootstrap.bundle.min.js"
+      integrity="sha384-40ix5a3dj6/qaC7tfz0Yr+p9fqWLzzAXiwxVLt9dw7UjQzGYw6rWRhFAnRapuQyK"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://kit.fontawesome.com/0faf04db21.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  
+
+  <script>
+
+			
+    let state = sessionStorage.getItem("id");
+    if (state == null) {
+      window.location = "auth.html";
+    }
+  </script>
+
+  <!-- comment above when you test! -->
+  <!--
+
+Simple House
+
+https://templatemo.com/tm-539-simple-house
+
+-->
+  <body  >
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="orders.html"
+              >الطلبات <span class="sr-only">(current)</span></a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="setting.html">الاعدادات</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="oldorders.html">الطلبات السابقة</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+ 
+	
+		  
+		
+        <hr />
+        <div  class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered m-0">
+              <thead>
+                <tr>
+                  <!-- Set columns width -->
+                  <th class="text-center py-3 px-4">رقم الجوال</th>
+                  <!-- <th class="text-right py-3 px-4">لون السيارة</th> -->
+                  <!-- <th class="text-center py-3 px-4">حجم السيارة</th> -->
+                  <!-- <th class="text-right py-3 px-4" >المجموع</th> -->
+                  <th colspan="2" class="text-center py-3 px-4">إجراءات</th>
+                </tr>
+              </thead>
+              <tbody id="mybody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <style>
+      .box {
+        float: left;
+        height: 20px;
+        width: 20px;
+        margin-bottom: 15px;
+        border: 1px solid black;
+        clear: both;
+      }
+    </style>
+
+
+
+    <!-- use the below script outside github -->
+    <script type="module">
+
+window.onmessage = function (e) {
+    if (e.data == 'back') {
+		
+
+		document.body.removeChild(document.getElementById("fr"));
+
+		
+
+	}}
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js";
+      import {
+        getFirestore,
+        collection,
+        query,
+        where,
+        getDocs,
+        doc,
+        getDoc,
+        onSnapshot,
+        updateDoc,
+        orderBy,
+      } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+      //   if (localStorage.getItem("firsttime") == null) {
+
+      var id = sessionStorage.getItem("id");
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyCXBoacFAwjCLeH1vRNO67XGfdG_eJjO7k",
+        authDomain: "qride-9fa6f.firebaseapp.com",
+        projectId: "qride-9fa6f",
+        storageBucket: "qride-9fa6f.appspot.com",
+        messagingSenderId: "632703434000",
+        appId: "1:632703434000:web:c2d133c8b4cfffd8ef3995",
+        measurementId: "G-VQTB8R1VHC",
+        //   databaseURL: "https://qride-9fa6f-europe-west2.firebaseio.com/"
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+      const db = getFirestore(app);
+
+	function prepareFrame(index) {
+
+		//document.getElementById('hideme').hidden = true;
+
+		var ifrm = document.createElement("iframe");
+		ifrm.setAttribute("id", "fr");
+		ifrm.setAttribute("src", "cart.html?index="+index+"&from=orders");
+		ifrm.setAttribute("style", "position: absolute; top: 0px; bottom: 0px; right: 0px; width: 100%; border: none; margin: 0; padding: 0; height: 100%;");
+
+
+		// ifrm.style.width = "100%";
+		// ifrm.style.height = "100%";
+		document.body.appendChild(ifrm);
+	}
+
+      function getQueryParams(qs) {
+        qs = qs.split("+").join(" ");
+
+        var params = {},
+          tokens,
+          re = /[?&]?([^=]+)=([^&]*)/g;
+
+        while ((tokens = re.exec(qs))) {
+          params[decodeURIComponent(tokens[1])] = decodeURIComponent(tokens[2]);
+        }
+
+        return params;
+      }
+      var qu = getQueryParams(document.location.search);
+
+      var from = qu.from;
+
+      const q = query(
+        collection(db, "orders"),
+        where("shopid", "==", id),
+        where("status", "==", "w"),
+        orderBy("date", "desc")
+      );
+
+      const notDone = onSnapshot(q, (querySnapshot) => {
+        console.log(querySnapshot["_snapshot"]["docChanges"].length);
+        if (querySnapshot["_snapshot"]["docChanges"].length == 1) {
+   
+            
+			window.top.postMessage('new', '*')
+
+
+            
+   
+        }
+
+        // let order = localStorage.getItem("order");
+
+        let orderst = [];
+        let ordernumst = 0;
+
+        querySnapshot.forEach((doc) => {
+          console.log(doc.id);
+
+          var obj = doc.data();
+
+          var newNum = "id";
+          var newVal = doc.id;
+
+          obj[newNum] = newVal;
+
+          // 	if(!orderst.includes(obj)){
+          // 	    orderst.push(obj)
+          // 	}
+
+          //orderst[ordernumst]
+
+          orderst[ordernumst++] = obj;
+        });
+
+        var stringorder = JSON.stringify(orderst);
+        localStorage.setItem("order", stringorder);
+
+        var order = localStorage.getItem("order");
+        if (order != null) {
+          let orderarr = JSON.parse(order);
+          var sizes = [
+            "img/0.jpeg",
+            "img/1.jpeg",
+            "img/2.jpeg",
+            "https://img.freepik.com/premium-photo/top-view-abstract-paper-texture-background_225709-2718.jpg?w=2000",
+          ];
+          var check2 = document.getElementById("mybody");
+          if (!check2.hasChildNodes()) {
+            //  var audio = new Audio('ring.mp3');
+            //  audio.play();
+          }
+          $("#mybody").empty();
+
+          for (let index = 0; index < orderarr.length; index++) {
+            var size = orderarr[index].size;
+            var sizenum = parseInt(size);
+            if (sizenum == null) {
+              sizenum = 3;
+            }
+            var html =
+              '<tr> <td class="p-4">  <div class="media align-items-center">  <div class="media-body">  <a href="#" class="d-block text-dark">' +
+              orderarr[index].phone +
+              '</a> </div></div></td><td class="text-center align-middle px-0"><a href="' +
+              orderarr[index].id +
+              '" class="btn done" ><i class="fa-solid fa-check done" style="color: black;"></i> Done</a></td> <td class="text-center align-middle px-0"><a id="cart" href="' +
+              index +
+              '"  class="btn cart" ><i class="fa-solid fa-cart-shopping cart" style="color: black;"></i></a></td>     </tr>';
+            html = $.parseHTML(html);
+
+            $("#mybody").append(html);
+          }
+        } else {
+        }
+
+        $(".done").click(function (e) {
+          e.preventDefault();
+
+          Swal.fire({
+            title: "Are you sure ",
+            text: "سيتم إتمام الطلب",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              if (this.href != undefined) {
+                var idarr = this.href.split("/"); // in prod maybe put \
+                var id = idarr[idarr.length - 1];
+                //alert(id);
+
+                const washingtonRef = doc(db, "orders", id);
+
+                // Set the "capital" field of the city 'DC'
+                updateDoc(washingtonRef, {
+                  status: "d",
+                }).then((e) => {
+                  location.reload();
+                });
+              }
+
+              Swal.fire("Done", "تم إتمام الطلب", "success");
+            } else {
+              location.reload();
+            }
+          });
+        });
+
+        $(".cart").click(function (e) {
+          e.preventDefault();
+          if (this.href != undefined) {
+            var indexarr = this.href.split("/"); // in prod maybe put \
+            var index = indexarr[indexarr.length - 1];
+
+			prepareFrame(index);
+
+
+
+          //  window.location = "cart.html?index=" + index + "&from=orders";
+          }
+        });
+      });
+
+      // here define first time
+      // localStorage.setItem("firsttime", false);
+
+      // }
+    </script>
+
+    <script>
+
+		
+// Swal.fire("يرجى الضغط على زر الاحمر لتفعيل النغمة", "Don't forget to press the red button to enable the notification", "warning").then((e) => {
+              
+//             });
+      // delete this one
+
+      var first = localStorage.getItem("first");
+      if (first == null) {
+        localStorage.setItem("first", true);
+        location.reload();
+      }
+    </script>
+  </body>
+</html>
+
+
+
